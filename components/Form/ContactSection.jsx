@@ -58,18 +58,18 @@ function validate(v) {
   if (v.email.trim() && !/^\S+@\S+\.\S+$/.test(v.email.trim()))
     e.email = "Enter a valid email address.";
   if (!v.service) e.service = "Please choose a service.";
-  if (v.message.trim().length < 10) e.message = "Tell us a little more (at least 10 characters).";
+  if (v.message.trim().length < 5) e.message = "Tell us a little more.";
   return e;
 }
 
 async function sendMessage(data) {
-  await new Promise((resolve) => setTimeout(resolve, 1600));
+  await new Promise((resolve) => setTimeout(resolve, 1400));
   return data;
 }
 
-/* ---------- Shared styles ---------- */
+/* ---------- Shared styles (Compact Viewport Optimized) ---------- */
 const inputBase =
-  "w-full rounded-2xl border bg-[var(--color-surface)]/50 px-4 py-4 text-base text-[var(--color-heading)] outline-none transition-[border-color,box-shadow,background-color] duration-300 placeholder:text-[var(--color-muted)] focus:bg-white focus:border-[var(--color-bronze)] focus:ring-4 focus:ring-[var(--color-bronze)]/15 sm:text-[0.95rem]";
+  "w-full rounded-xl border bg-[var(--color-surface)]/40 px-3.5 py-2.5 text-sm sm:text-base text-[var(--color-heading)] outline-none transition-[border-color,box-shadow,background-color] duration-300 placeholder:text-[var(--color-muted)] focus:bg-white focus:border-[var(--color-bronze)] focus:ring-2 focus:ring-[var(--color-bronze)]/15";
 
 const inputState = (error) =>
   error ? "border-red-400 bg-red-50/30 focus:border-red-400 focus:ring-red-400/15" : "border-[var(--color-border)]";
@@ -77,15 +77,15 @@ const inputState = (error) =>
 /* ---------- Animation variants ---------- */
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.03 } },
 };
 
 const rise = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE } },
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
 };
 
-const viewport = { once: true, amount: 0.2 };
+const viewport = { once: true, amount: 0.1 };
 
 /* ---------- Field wrapper ---------- */
 function Field({ id, label, optional, error, children }) {
@@ -93,16 +93,16 @@ function Field({ id, label, optional, error, children }) {
     <div>
       <label
         htmlFor={id}
-        className="mb-2.5 flex items-center justify-between text-sm font-medium text-[var(--color-heading)]"
+        className="mb-1.5 flex items-center justify-between text-xs sm:text-sm font-medium text-[var(--color-heading)]"
       >
         {label}
         {optional && (
-          <span className="text-xs font-normal text-[var(--color-muted)]">Optional</span>
+          <span className="text-[11px] font-normal text-[var(--color-muted)]">Optional</span>
         )}
       </label>
       {children}
       {error && (
-        <p id={`${id}-error`} role="alert" className="mt-1.5 text-xs text-red-500 font-medium">
+        <p id={`${id}-error`} role="alert" className="mt-1 text-[11px] text-red-500 font-medium">
           {error}
         </p>
       )}
@@ -156,13 +156,13 @@ function ContactSection() {
       <section
         id="contact"
         aria-labelledby="contact-heading"
-        className="relative w-full bg-[var(--color-background)] py-24 sm:py-32 lg:py-40"
+        className="relative w-full bg-[var(--color-background)] lg:h-[calc(100vh-5rem)] lg:min-h-[680px] lg:max-h-[850px] flex items-center py-12 lg:py-0 overflow-hidden"
       >
         {/* Top subtle decorative divider rule */}
         <div className="absolute top-0 left-5 right-5 sm:left-8 sm:right-8 lg:left-12 lg:right-12 h-px bg-[var(--color-border)] opacity-60" />
 
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* ================= LEFT: Info (Cols 1-5) ================= */}
             <motion.div
@@ -170,20 +170,20 @@ function ContactSection() {
               initial="hidden"
               whileInView="show"
               viewport={viewport}
-              className="lg:col-span-5 flex flex-col pt-2"
+              className="lg:col-span-5 flex flex-col"
             >
               <motion.span
                 variants={rise}
-                className="inline-flex items-center gap-3 text-xs font-medium uppercase tracking-[0.3em] text-[var(--color-bronze)]"
+                className="inline-flex items-center gap-2.5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-bronze)]"
               >
-                <span className="h-px w-8 bg-[var(--color-bronze)]" />
+                <span className="h-px w-6 bg-[var(--color-bronze)]" />
                 Get In Touch
               </motion.span>
 
               <motion.h2
                 id="contact-heading"
                 variants={rise}
-                className="mt-6 text-4xl leading-[1.08] tracking-tight text-[var(--color-heading)] sm:text-5xl lg:text-6xl"
+                className="mt-3 text-3xl sm:text-4xl lg:text-5xl leading-[1.08] tracking-tight text-[var(--color-heading)]"
               >
                 Let&rsquo;s bring your furniture{" "}
                 <span className="italic text-[var(--color-bronze)]">
@@ -193,29 +193,29 @@ function ContactSection() {
 
               <motion.p
                 variants={rise}
-                className="mt-6 text-base leading-relaxed text-[var(--color-paragraph)] sm:text-lg"
+                className="mt-3.5 text-sm sm:text-base leading-relaxed text-[var(--color-paragraph)] max-w-md"
               >
                 Tell us what you need—a repair, a custom build, or expert advice. We&rsquo;ll get
                 back to you within 24 hours with a free quote.
               </motion.p>
 
               {/* Contact details */}
-              <motion.ul variants={rise} className="mt-10 flex flex-col gap-6">
+              <motion.ul variants={rise} className="mt-6 flex flex-col gap-3.5">
                 {DETAILS.map(({ icon: Icon, label, value, href, external }) => (
                   <li key={label}>
                     <a
                       href={href}
                       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                      className="group flex items-start gap-4"
+                      className="group flex items-center gap-3.5"
                     >
-                      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]/60 text-[var(--color-heading)] transition-all duration-300 group-hover:border-[var(--color-bronze)] group-hover:bg-[var(--color-bronze)] group-hover:text-white">
-                        <Icon aria-hidden="true" className="h-5 w-5" />
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/60 text-[var(--color-heading)] transition-all duration-300 group-hover:border-[var(--color-bronze)] group-hover:bg-[var(--color-bronze)] group-hover:text-white">
+                        <Icon aria-hidden="true" className="h-4 w-4" />
                       </span>
-                      <span className="flex min-w-0 flex-col pt-1">
-                        <span className="text-xs uppercase tracking-[0.2em] text-[var(--color-muted)] font-medium">
+                      <span className="flex min-w-0 flex-col">
+                        <span className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)] font-medium">
                           {label}
                         </span>
-                        <span className="mt-1 break-words text-base text-[var(--color-heading)] font-medium transition-colors duration-300 group-hover:text-[var(--color-bronze)] sm:text-lg">
+                        <span className="text-sm sm:text-base text-[var(--color-heading)] font-medium transition-colors duration-300 group-hover:text-[var(--color-bronze)] truncate">
                           {value}
                         </span>
                       </span>
@@ -227,12 +227,12 @@ function ContactSection() {
               {/* Social icons */}
               <motion.div
                 variants={rise}
-                className="mt-12 border-t border-[var(--color-border)] pt-8"
+                className="mt-6 border-t border-[var(--color-border)] pt-5"
               >
-                <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-muted)] font-medium">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-muted)] font-medium mb-2.5">
                   Connect & Socials
                 </p>
-                <ul className="mt-4 flex flex-wrap gap-3">
+                <ul className="flex flex-wrap gap-2.5">
                   {SOCIALS.map(({ icon: Icon, label, href }) => (
                     <li key={label}>
                       <a
@@ -240,9 +240,9 @@ function ContactSection() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={label}
-                        className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)]/40 text-[var(--color-heading)] transition-all duration-300 hover:-translate-y-1 hover:border-[var(--color-bronze)] hover:bg-[var(--color-bronze)] hover:text-white"
+                        className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]/40 text-[var(--color-heading)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--color-bronze)] hover:bg-[var(--color-bronze)] hover:text-white"
                       >
-                        <Icon aria-hidden="true" className="h-[18px] w-[18px]" />
+                        <Icon aria-hidden="true" className="h-4 w-4" />
                       </a>
                     </li>
                   ))}
@@ -252,53 +252,53 @@ function ContactSection() {
 
             {/* ================= RIGHT: Form (Cols 6-12) ================= */}
             <motion.div
-              initial={{ opacity: 0, y: 36 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={viewport}
-              transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
-              className="lg:col-span-7 rounded-[2.5pax] sm:rounded-[2.5rem] bg-[var(--color-surface)]/40 border border-[var(--color-border)] p-6 sm:p-10 lg:p-12 shadow-[0_20px_50px_-30px_rgba(51,45,39,0.15)]"
+              transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
+              className="lg:col-span-7 rounded-3xl bg-[var(--color-surface)]/30 border border-[var(--color-border)] p-5 sm:p-8 lg:p-9 shadow-[0_15px_40px_-20px_rgba(51,45,39,0.12)] backdrop-blur-sm"
             >
               <AnimatePresence mode="wait" initial={false}>
                 {status === "success" ? (
                   /* ---------- Thank you ---------- */
                   <motion.div
                     key="success"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.5, ease: EASE }}
+                    transition={{ duration: 0.4, ease: EASE }}
                     role="status"
                     aria-live="polite"
-                    className="flex min-h-[30rem] flex-col items-center justify-center text-center py-10"
+                    className="flex flex-col items-center justify-center text-center py-12"
                   >
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.15 }}
-                      className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-olive)] text-[var(--color-background)]"
+                      transition={{ type: "spring", stiffness: 220, damping: 14, delay: 0.1 }}
+                      className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-olive)] text-[var(--color-background)]"
                     >
-                      <FiCheck aria-hidden="true" className="h-9 w-9" />
+                      <FiCheck aria-hidden="true" className="h-7 w-7" />
                     </motion.span>
 
                     <h3
                       ref={successRef}
                       tabIndex={-1}
-                      className="mt-7 text-3xl font-medium outline-none sm:text-4xl text-[var(--color-heading)] font-[family-name:var(--font-heading)]"
+                      className="mt-5 text-2xl sm:text-3xl font-medium outline-none text-[var(--color-heading)] font-[family-name:var(--font-heading)]"
                     >
                       Thank you, {values.name.trim().split(" ")[0]}!
                     </h3>
-                    <p className="mt-3 max-w-sm text-base leading-relaxed text-[var(--color-paragraph)]">
+                    <p className="mt-2 text-sm sm:text-base leading-relaxed text-[var(--color-paragraph)] max-w-xs">
                       Your request for{" "}
                       <span className="font-medium text-[var(--color-heading)]">
                         {values.service}
                       </span>{" "}
-                      has been received. Our workshop team will call you within 24 hours.
+                      has been received. We will call you within 24 hours.
                     </p>
 
                     <button
                       type="button"
                       onClick={reset}
-                      className="mt-8 rounded-full border border-[var(--color-heading)]/25 px-7 py-3.5 text-sm font-medium tracking-wide text-[var(--color-heading)] transition-colors duration-300 hover:border-[var(--color-heading)] hover:bg-[var(--color-heading)] hover:text-[var(--color-background)]"
+                      className="mt-6 rounded-full border border-[var(--color-heading)]/25 px-6 py-2.5 text-xs sm:text-sm font-medium text-[var(--color-heading)] transition-colors duration-300 hover:bg-[var(--color-heading)] hover:text-[var(--color-background)]"
                     >
                       Send another message
                     </button>
@@ -312,17 +312,19 @@ function ContactSection() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: 0.3 }}
                     aria-busy={loading}
-                    className="flex flex-col gap-6"
+                    className="flex flex-col gap-4"
                   >
-                    <div>
-                      <h3 className="text-3xl sm:text-4xl font-[family-name:var(--font-heading)] font-medium text-[var(--color-heading)]">
-                        Request a free quote
-                      </h3>
-                      <p className="mt-2 text-sm text-[var(--color-muted)]">
-                        Fill in the details below and we&rsquo;ll review your requirements.
-                      </p>
+                    <div className="flex items-center justify-between pb-1">
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-[family-name:var(--font-heading)] font-medium text-[var(--color-heading)]">
+                          Request a free quote
+                        </h3>
+                        <p className="text-xs text-[var(--color-muted)] mt-0.5">
+                          Takes less than a minute. Free workshop estimate.
+                        </p>
+                      </div>
                     </div>
 
                     {/* Honeypot */}
@@ -337,7 +339,7 @@ function ContactSection() {
                       className="absolute -left-[9999px] h-0 w-0 opacity-0"
                     />
 
-                    <div className="grid gap-6 sm:grid-cols-2">
+                    <div className="grid gap-3.5 sm:grid-cols-2">
                       <Field id="name" label="Full name" error={errors.name}>
                         <input
                           id="name"
@@ -372,63 +374,61 @@ function ContactSection() {
                       </Field>
                     </div>
 
-                    <Field id="email" label="Email address" optional error={errors.email}>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        inputMode="email"
-                        autoComplete="email"
-                        placeholder="you@example.com"
-                        value={values.email}
-                        onChange={handleChange}
-                        disabled={loading}
-                        aria-invalid={!!errors.email}
-                        aria-describedby={errors.email ? "email-error" : undefined}
-                        className={`${inputBase} ${inputState(errors.email)}`}
-                      />
-                    </Field>
-
-                    <Field id="service" label="Service you need" error={errors.service}>
-                      <div className="relative">
-                        <select
-                          id="service"
-                          name="service"
-                          value={values.service}
+                    <div className="grid gap-3.5 sm:grid-cols-2">
+                      <Field id="email" label="Email address" optional error={errors.email}>
+                        <input
+                          id="email"
+                          name="email"
+                          type="email"
+                          inputMode="email"
+                          autoComplete="email"
+                          placeholder="you@example.com"
+                          value={values.email}
                           onChange={handleChange}
                           disabled={loading}
-                          aria-invalid={!!errors.service}
-                          aria-describedby={errors.service ? "service-error" : undefined}
-                          className={`${inputBase} ${inputState(errors.service)} cursor-pointer appearance-none pr-11 ${
-                            values.service ? "" : "text-[var(--color-muted)]"
-                          }`}
-                        >
-                          <option value="" disabled>
-                            Select a service
-                          </option>
-                          {SERVICES.map((s) => (
-                            <option key={s} value={s} className="text-[var(--color-heading)]">
-                              {s}
-                            </option>
-                          ))}
-                        </select>
-                        <FiChevronDown
-                          aria-hidden="true"
-                          className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-bronze)]"
+                          aria-invalid={!!errors.email}
+                          aria-describedby={errors.email ? "email-error" : undefined}
+                          className={`${inputBase} ${inputState(errors.email)}`}
                         />
-                      </div>
-                    </Field>
+                      </Field>
+
+                      <Field id="service" label="Service you need" error={errors.service}>
+                        <div className="relative">
+                          <select
+                            id="service"
+                            name="service"
+                            value={values.service}
+                            onChange={handleChange}
+                            disabled={loading}
+                            aria-invalid={!!errors.service}
+                            aria-describedby={errors.service ? "service-error" : undefined}
+                            className={`${inputBase} ${inputState(errors.service)} cursor-pointer appearance-none pr-10 ${
+                              values.service ? "" : "text-[var(--color-muted)]"
+                            }`}
+                          >
+                            <option value="" disabled>
+                              Select service
+                            </option>
+                            {SERVICES.map((s) => (
+                              <option key={s} value={s} className="text-[var(--color-heading)]">
+                                {s}
+                              </option>
+                            ))}
+                          </select>
+                          <FiChevronDown
+                            aria-hidden="true"
+                            className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-bronze)]"
+                          />
+                        </div>
+                      </Field>
+                    </div>
 
                     <Field id="message" label="Project details & description" error={errors.message}>
                       <textarea
                         id="message"
                         name="message"
-                        rows={4}
-                        placeholder={
-                          values.service === "Other"
-                            ? "Tell us what you are looking for..."
-                            : "Describe the furniture, its current condition, or measurements..."
-                        }
+                        rows={3}
+                        placeholder="Describe furniture condition or requirements..."
                         value={values.message}
                         onChange={handleChange}
                         disabled={loading}
@@ -441,23 +441,23 @@ function ContactSection() {
                     {status === "error" && (
                       <p
                         role="alert"
-                        className="flex items-start gap-2 rounded-2xl border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-600 font-medium"
+                        className="flex items-start gap-2 rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-xs text-red-600 font-medium"
                       >
-                        <FiAlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
-                        Something went wrong while sending. Please try again or call us directly.
+                        <FiAlertCircle aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                        Something went wrong. Please try calling us directly.
                       </p>
                     )}
 
                     <button
                       type="submit"
                       disabled={loading}
-                      className="group relative mt-2 inline-flex w-full items-center justify-center gap-3 rounded-full bg-[var(--color-button)] px-8 py-4 text-sm font-medium tracking-wide text-[var(--color-button-text)] transition-all duration-300 hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-80 sm:text-base shadow-lg shadow-[var(--color-button)]/10"
+                      className="group relative mt-1 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[var(--color-button)] px-6 py-3 text-xs sm:text-sm font-medium tracking-wide text-[var(--color-button-text)] transition-all duration-300 hover:bg-[var(--color-button-hover)] disabled:cursor-not-allowed disabled:opacity-80 shadow-md shadow-[var(--color-button)]/10"
                     >
                       {loading ? (
                         <>
                           <span
                             aria-hidden="true"
-                            className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--color-button-text)]/30 border-t-[var(--color-button-text)]"
+                            className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-button-text)]/30 border-t-[var(--color-button-text)]"
                           />
                           Sending Request...
                         </>
@@ -466,15 +466,11 @@ function ContactSection() {
                           Send Message & Get Quote
                           <FiArrowUpRight
                             aria-hidden="true"
-                            className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                            className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                           />
                         </>
                       )}
                     </button>
-
-                    <p className="text-center text-xs text-[var(--color-muted)]">
-                      Your details are secure and used solely to respond to your inquiry.
-                    </p>
                   </motion.form>
                 )}
               </AnimatePresence>

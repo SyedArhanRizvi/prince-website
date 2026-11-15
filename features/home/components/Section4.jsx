@@ -284,7 +284,7 @@ export default function Section4() {
     <section
       ref={root}
       aria-labelledby="services-heading"
-      className="relative w-full bg-[var(--color-background)] pt-16 sm:pt-24 lg:pt-28"
+      className="relative w-full bg-[var(--color-background)] "
     >
       {/* ---------- Header ---------- */}
       <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12">

@@ -71,16 +71,7 @@ function Chapter({ data, className = "" }) {
       viewport={viewport}
       className={`relative flex flex-col justify-center ${className}`}
     >
-      {/* Big faded chapter number */}
-      <motion.span
-        aria-hidden="true"
-        variants={rise}
-        className="pointer-events-none absolute -top-6 right-0 select-none font-[family-name:var(--font-heading)] text-[7rem] font-medium leading-none text-[var(--color-border)]/70 sm:-top-10 sm:text-[9rem] lg:text-[11rem]"
-      >
-        {data.number}
-      </motion.span>
-
-      <motion.div variants={rise} className="relative flex items-center gap-4">
+            <motion.div variants={rise} className="relative flex items-center gap-4">
         <span className="h-px w-10 bg-[var(--color-bronze)] sm:w-14" />
         <span className="text-xs font-medium uppercase tracking-[0.3em] text-[var(--color-bronze)]">
           {data.eyebrow}

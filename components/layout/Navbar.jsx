@@ -125,7 +125,7 @@ function Navbar() {
       : "border-[var(--color-background)]/30 text-[var(--color-background)] hover:bg-[var(--color-background)]/15"
   }`;
 
-  const callBtn = `inline-flex items-center gap-2.5 rounded-full border px-5 py-3 text-sm font-medium tracking-wide transition-colors duration-300 ${
+  const callBtn = `lg:inline-flex items-center gap-2.5 rounded-full border px-5 py-3 text-sm font-medium tracking-wide transition-colors duration-300 ${
     solid
       ? "border-transparent bg-[var(--color-button)] text-[var(--color-button-text)] hover:bg-[var(--color-button-hover)]"
       : "border-[var(--color-background)]/40 text-[var(--color-background)] hover:bg-[var(--color-background)] hover:text-[var(--color-heading)]"
@@ -266,13 +266,13 @@ function Navbar() {
 
         {/* ================= RIGHT: Call + Hamburger ================= */}
         <div className="flex items-center justify-self-end gap-2 sm:gap-3">
-          {/* Desktop call button */}
+          {/* Desktop call button (Hidden on mobile/tablet) */}
           <a href={PHONE_HREF} className={`${callBtn} hidden lg:inline-flex`}>
             <FiPhone aria-hidden="true" className="h-4 w-4" />
             <span>{PHONE_LABEL}</span>
           </a>
 
-          {/* Mobile call icon */}
+          {/* Mobile call icon (Visible only on mobile/tablet, hidden on desktop) */}
           <a
             href={PHONE_HREF}
             aria-label={`Call us at ${PHONE_LABEL}`}
