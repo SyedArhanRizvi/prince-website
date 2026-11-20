@@ -5,20 +5,15 @@ import type { ChangeEvent, FormEvent, ReactNode } from "react";
 import Image from "next/image";
 import { MotionConfig, motion } from "framer-motion";
 
-/* ---------- Types ---------- */
-export type HeroData = {
+/* ---------- Dynamic Data Interface ---------- */
+export interface HeroDynamicData {
   title: string;
   description: string;
   backgroundImage: string;
-  backgroundAlt: string;
-  phoneDisplay: string;
-  phoneTel: string;
-  whatsappNumber: string; // digits only, with country code, e.g. 919876543210
-  whatsappMessage: string;
-  formTitle: string;
-  formDescription: string;
-};
+  backgroundAlt?: string;
+}
 
+/* ---------- Form & Component Types ---------- */
 export type EnquiryValues = {
   fullName: string;
   phone: string;
@@ -28,36 +23,45 @@ export type EnquiryValues = {
 };
 
 type HeroSectionProps = {
-  data?: Partial<HeroData>;
-  services?: readonly string[];
+  /** Only title, description, and backgroundImage (plus optional alt) are dynamic */
+  dynamicData?: Partial<HeroDynamicData>;
   /** Plug your API call in here. Throw an error to show the error message. */
   onSubmit?: (values: EnquiryValues) => Promise<void>;
 };
 
-/* ---------- Default (dummy) data, replace with dynamic data ---------- */
+/* ---------- Static Data ---------- */
 export const SERVICES = [
-  "Sofa Repair",
   "New Sofa",
-  "Recliner Repair",
-  "New Recliner",
-  "Dining Chair Repair",
+  "Sofa Repair",
+  "Sofa-Cum-Bed Repair",
+  "New Bed",
+  "Bed Repair",
+  "New Highback Chair",
+  "Highback Chair Repair",
   "New Dining Chair",
+  "Dining Chair Repair",
+  "New Recliner",
+  "Recliner Repair",
   "Other",
 ] as const;
 
-const DEFAULT_DATA: HeroData = {
+const DEFAULT_DYNAMIC_DATA: HeroDynamicData = {
   title: "Sofa repair and new sofas, made to last",
   description:
     "From frame repair and reupholstery to custom-built sofas, recliners and dining chairs, our craftsmen bring comfort back to your home. Tell us what you need and we will plan the right fix or build the right piece for your space.",
   backgroundImage: "/services/hero-bg.jpg",
   backgroundAlt: "Dark, softly lit living room with a handcrafted sofa",
-  phoneDisplay: "+91 00000 00000",
-  phoneTel: "+910000000000",
-  whatsappNumber: "910000000000",
+};
+
+const STATIC_CONFIG = {
+  phoneDisplay: "+91 98765 43210",
+  phoneTel: "+919876543210",
+  whatsappNumber: "919876543210",
   whatsappMessage: "Hi, I'd like to talk about a furniture project.",
   formTitle: "Tell us what you need",
-  formDescription: "Fill in the details and we will call you back to discuss your project.",
-};
+  formDescription:
+    "Fill in the details and we will call you back to discuss your project.",
+} as const;
 
 const EMPTY_FORM: EnquiryValues = {
   fullName: "",
@@ -174,12 +178,8 @@ function ChevronIcon() {
 
 /* ---------- Enquiry form ---------- */
 function EnquiryForm({
-  data,
-  services,
   onSubmit,
 }: {
-  data: HeroData;
-  services: readonly string[];
   onSubmit?: (values: EnquiryValues) => Promise<void>;
 }) {
   const [values, setValues] = useState<EnquiryValues>(EMPTY_FORM);
@@ -223,10 +223,10 @@ function EnquiryForm({
     >
       <div className="sm:col-span-2">
         <h2 className="text-3xl leading-tight tracking-tight sm:text-4xl lg:text-3xl xl:text-4xl">
-          {data.formTitle}
+          {STATIC_CONFIG.formTitle}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-[var(--color-paragraph)] sm:text-base lg:text-sm [@media(min-width:1024px)_and_(max-height:760px)]:hidden">
-          {data.formDescription}
+          {STATIC_CONFIG.formDescription}
         </p>
       </div>
 
@@ -289,7 +289,7 @@ function EnquiryForm({
             <option value="" disabled>
               Select service
             </option>
-            {services.map((service) => (
+            {SERVICES.map((service) => (
               <option
                 key={service}
                 value={service}
@@ -346,31 +346,30 @@ function EnquiryForm({
 }
 
 /* ---------- Hero ---------- */
-function HeroSection({ data, services = SERVICES, onSubmit }: HeroSectionProps) {
-  const content: HeroData = { ...DEFAULT_DATA, ...data };
-  const whatsappHref = `https://wa.me/${content.whatsappNumber.replace(
+function HeroSection({ dynamicData, onSubmit }: HeroSectionProps) {
+  const { title, description, backgroundImage, backgroundAlt }: HeroDynamicData = {
+    ...DEFAULT_DYNAMIC_DATA,
+    ...dynamicData,
+  };
+
+  const whatsappHref = `https://wa.me/${STATIC_CONFIG.whatsappNumber.replace(
     /\D/g,
     ""
-  )}?text=${encodeURIComponent(content.whatsappMessage)}`;
+  )}?text=${encodeURIComponent(STATIC_CONFIG.whatsappMessage)}`;
 
   const ctaBase =
     "inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-sm font-medium transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bronze)] sm:text-base";
 
   return (
     <MotionConfig reducedMotion="user">
-      {/*
-        Mobile / tablet: grows with its content.
-        lg and up: exactly one screen tall, nothing scrolls.
-        lg:pt-24 leaves room for a fixed navbar, adjust to your header height.
-      */}
       <section
         aria-label="Services"
         className="relative isolate flex min-h-[100svh] w-full items-center bg-[var(--color-heading)] py-28 sm:py-32 lg:h-[100svh] lg:min-h-[600px] lg:pb-8 lg:pt-24"
       >
-        {/* Dark background image */}
+        {/* Dynamic background image */}
         <Image
-          src={content.backgroundImage}
-          alt={content.backgroundAlt}
+          src={backgroundImage}
+          alt={backgroundAlt ?? DEFAULT_DYNAMIC_DATA.backgroundAlt!}
           fill
           priority
           quality={80}
@@ -389,7 +388,7 @@ function HeroSection({ data, services = SERVICES, onSubmit }: HeroSectionProps) 
 
         <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10 xl:px-12">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-10 xl:gap-16">
-            {/* Left: content */}
+            {/* Left: dynamic content + static actions */}
             <motion.div
               variants={stagger}
               initial="hidden"
@@ -399,7 +398,7 @@ function HeroSection({ data, services = SERVICES, onSubmit }: HeroSectionProps) 
               <h1 className="max-w-3xl text-4xl leading-[1.08] tracking-tight !text-[var(--color-background)] sm:text-5xl xl:text-6xl">
                 <span className="block overflow-hidden pb-[0.12em]">
                   <motion.span variants={lineUp} className="block">
-                    {content.title}
+                    {title}
                   </motion.span>
                 </span>
               </h1>
@@ -408,7 +407,7 @@ function HeroSection({ data, services = SERVICES, onSubmit }: HeroSectionProps) 
                 variants={fade}
                 className="mt-6 max-w-xl text-base leading-relaxed text-[var(--color-background)]/80 sm:text-lg"
               >
-                {content.description}
+                {description}
               </motion.p>
 
               <motion.div
@@ -416,8 +415,8 @@ function HeroSection({ data, services = SERVICES, onSubmit }: HeroSectionProps) 
                 className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
               >
                 <a
-                  href={`tel:${content.phoneTel}`}
-                  aria-label={`Call us on ${content.phoneDisplay}`}
+                  href={`tel:${STATIC_CONFIG.phoneTel}`}
+                  aria-label={`Call us on ${STATIC_CONFIG.phoneDisplay}`}
                   className={`${ctaBase} bg-[var(--color-background)] text-[var(--color-heading)] hover:bg-[var(--color-bronze)] hover:text-[var(--color-button-text)]`}
                 >
                   <PhoneIcon />
@@ -435,18 +434,14 @@ function HeroSection({ data, services = SERVICES, onSubmit }: HeroSectionProps) 
               </motion.div>
             </motion.div>
 
-            {/* Right: enquiry form */}
+            {/* Right: static enquiry form */}
             <motion.div
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: EASE, delay: 0.35 }}
               className="lg:col-span-6 xl:col-span-5 xl:col-start-8"
             >
-              <EnquiryForm
-                data={content}
-                services={services}
-                onSubmit={onSubmit}
-              />
+              <EnquiryForm onSubmit={onSubmit} />
             </motion.div>
           </div>
         </div>

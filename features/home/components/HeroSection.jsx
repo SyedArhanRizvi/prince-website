@@ -26,7 +26,7 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative isolate flex min-h-screen w-full justify-center overflow-hidden bg-[var(--color-heading)]">
+    <section className="relative isolate flex min-h-screen w-full items-center justify-center overflow-hidden bg-[var(--color-heading)] pt-28 pb-16 sm:pt-32 lg:pt-36">
       {/* Background image with slow zoom-in */}
       <motion.div
         initial={{ scale: reduceMotion ? 1 : 1.12 }}
@@ -60,7 +60,7 @@ function HeroSection() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-5 pt-20 text-center sm:px-8 lg:px-12"
+        className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-5 text-center sm:px-8 lg:px-12"
       >
         <motion.span
           variants={fadeUp}

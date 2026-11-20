@@ -22,13 +22,28 @@ const PHONE_HREF = "tel:+919876543210";
 const SHOW_ALWAYS_BELOW = 80; // px from top where the navbar is always visible
 const SCROLL_THRESHOLD = 8; // ignore tiny scroll movements (trackpad jitter)
 
-const SERVICES = [
-  { title: "Sofa Repair", desc: "Restore comfort and shape", href: "/sofa-repair" },
-  { title: "New Sofa", desc: "Custom-made, built to last", href: "/new-sofa" },
-  { title: "Recliner Repair", desc: "Mechanisms, motors and fabric", href: "/recliner-repair" },
-  { title: "New Recliner", desc: "Plush, smooth-reclining designs", href: "/new-recliner" },
-  { title: "Dining Chair Repair", desc: "Joints, seats and finishes", href: "/dining-chair-repair" },
-  { title: "New Dining Chair", desc: "Elegant sets for every table", href: "/new-dining-chair" },
+const SERVICE_CATEGORIES = [
+  {
+    category: "New Custom Furniture",
+    items: [
+      { title: "New Sofa", desc: "Custom-made, built to last", href: "/new-sofa" },
+      { title: "New Bed", desc: "Sturdy, custom-crafted bed frames", href: "/new-bed" },
+      { title: "New Highback Chair", desc: "Ergonomic and statement seating", href: "/new-highback-chair" },
+      { title: "New Dining Chair", desc: "Elegant sets for every table", href: "/new-dining-chair" },
+      { title: "New Recliner", desc: "Plush, smooth-reclining designs", href: "/new-recliner" },
+    ],
+  },
+  {
+    category: "Repair & Upholstery",
+    items: [
+      { title: "Sofa Repair", desc: "Restore comfort, foam, and shape", href: "/sofa-repair" },
+      { title: "Sofa-Cum-Bed Repair", desc: "Folding frames, hinges, and fabric", href: "/sofa-cum-bed-repair" },
+      { title: "Bed Repair", desc: "Frame reinforcement, headboards, and polish", href: "/bed-repair" },
+      { title: "Highback Chair Repair", desc: "Cushioning, upholstery, and frame fixes", href: "/highback-chair-repair" },
+      { title: "Dining Chair Repair", desc: "Joints, seats, and finishes", href: "/dining-chair-repair" },
+      { title: "Recliner Repair", desc: "Mechanisms, motors, and fabric", href: "/recliner-repair" },
+    ],
+  },
 ];
 
 const LINKS = [
@@ -58,6 +73,13 @@ function Navbar() {
 
   // Never hide while a menu is open
   const hideNav = hidden && !mobileOpen && !dropdownOpen;
+
+  // Highlight "Services" if current path matches any service href
+  const isServiceActive =
+    pathname.startsWith("/services") ||
+    SERVICE_CATEGORIES.some((group) =>
+      group.items.some((item) => pathname === item.href)
+    );
 
   /* ---------- Hover dropdown (with small delay so it never flickers) ---------- */
   const openDropdown = () => {
@@ -182,7 +204,6 @@ function Navbar() {
         duration: reduceMotion ? 0.01 : 0.55,
         ease: EASE,
       }}
-      // Keyboard users tabbing into the navbar always get it back
       onFocusCapture={() => setHidden(false)}
       className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-500 ${
         solid
@@ -213,9 +234,9 @@ function Navbar() {
           </span>
         </Link>
 
-        {/* ================= CENTER: Links ================= */}
+        {/* ================= CENTER: Links (Desktop) ================= */}
         <ul className="hidden items-center gap-10 lg:flex">
-          {/* Services + dropdown */}
+          {/* Services + Categorized Mega Dropdown */}
           <li
             ref={dropdownRef}
             className="relative"
@@ -229,11 +250,9 @@ function Navbar() {
               type="button"
               aria-haspopup="true"
               aria-expanded={dropdownOpen}
-              onClick={openDropdown}
+              onClick={() => setDropdownOpen((v) => !v)}
               className={`${linkBase} inline-flex items-center gap-1.5 ${
-                dropdownOpen || pathname.startsWith("/services")
-                  ? "after:scale-x-100"
-                  : ""
+                dropdownOpen || isServiceActive ? "after:scale-x-100" : ""
               }`}
             >
               Services
@@ -253,35 +272,47 @@ function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: reduceMotion ? 0 : 6 }}
                   transition={{ duration: 0.25, ease: EASE }}
-                  className="absolute left-1/2 top-full w-[34rem] pt-5"
+                  className="absolute left-1/2 top-full w-[46rem] max-w-[92vw] pt-5"
                 >
-                  <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-3 shadow-[0_24px_60px_-20px_rgba(51,45,39,0.35)]">
-                    <ul className="grid grid-cols-2 gap-1">
-                      {SERVICES.map((s) => (
-                        <li key={s.href}>
-                          <Link
-                            href={s.href}
-                            onClick={() => setDropdownOpen(false)}
-                            className="group flex items-start justify-between gap-3 rounded-xl p-4 transition-colors duration-300 hover:bg-[var(--color-surface)]"
-                          >
-                            <span className="flex flex-col">
-                              <span className="font-[family-name:var(--font-heading)] text-xl font-medium text-[var(--color-heading)]">
-                                {s.title}
-                              </span>
-                              <span className="mt-0.5 text-sm text-[var(--color-muted)]">
-                                {s.desc}
-                              </span>
-                            </span>
-                            <FiArrowUpRight
-                              aria-hidden="true"
-                              className="mt-1.5 h-4 w-4 shrink-0 -translate-x-1 translate-y-1 text-[var(--color-bronze)] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
-                            />
-                          </Link>
-                        </li>
+                  <div className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-background)] p-5 shadow-[0_24px_60px_-20px_rgba(51,45,39,0.35)]">
+                    <div className="grid grid-cols-2 divide-x divide-[var(--color-border)]">
+                      {SERVICE_CATEGORIES.map((group, idx) => (
+                        <div
+                          key={group.category}
+                          className={idx === 0 ? "pr-4" : "pl-4"}
+                        >
+                          <p className="mb-2.5 px-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[var(--color-bronze)]">
+                            {group.category}
+                          </p>
+                          <ul className="flex flex-col gap-0.5">
+                            {group.items.map((s) => (
+                              <li key={s.href}>
+                                <Link
+                                  href={s.href}
+                                  onClick={() => setDropdownOpen(false)}
+                                  className="group flex items-start justify-between gap-3 rounded-xl px-3 py-2.5 transition-colors duration-300 hover:bg-[var(--color-surface)]"
+                                >
+                                  <span className="flex flex-col">
+                                    <span className="font-[family-name:var(--font-heading)] text-lg font-medium leading-snug text-[var(--color-heading)]">
+                                      {s.title}
+                                    </span>
+                                    <span className="mt-0.5 text-xs text-[var(--color-muted)]">
+                                      {s.desc}
+                                    </span>
+                                  </span>
+                                  <FiArrowUpRight
+                                    aria-hidden="true"
+                                    className="mt-1 h-4 w-4 shrink-0 -translate-x-1 translate-y-1 text-[var(--color-bronze)] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+                                  />
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
 
-                    <div className="mt-2 flex items-center justify-between border-t border-[var(--color-border)] px-4 pb-1 pt-4 text-sm">
+                    <div className="mt-4 flex items-center justify-between border-t border-[var(--color-border)] px-3 pt-3.5 text-sm">
                       <span className="text-[var(--color-muted)]">
                         Not sure what you need?
                       </span>
@@ -316,13 +347,13 @@ function Navbar() {
 
         {/* ================= RIGHT: Call + Hamburger ================= */}
         <div className="flex items-center justify-self-end gap-2 sm:gap-3">
-          {/* Desktop call button (Hidden on mobile/tablet) */}
+          {/* Desktop call button */}
           <a href={PHONE_HREF} className={`${callBtn} hidden lg:inline-flex`}>
             <FiPhone aria-hidden="true" className="h-4 w-4" />
             <span>{PHONE_LABEL}</span>
           </a>
 
-          {/* Mobile call icon (Visible only on mobile/tablet, hidden on desktop) */}
+          {/* Mobile/Tablet call icon */}
           <a
             href={PHONE_HREF}
             aria-label={`Call us at ${PHONE_LABEL}`}
@@ -360,7 +391,7 @@ function Navbar() {
         </div>
       </nav>
 
-      {/* ================= MOBILE MENU ================= */}
+      {/* ================= MOBILE & TABLET MENU ================= */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -373,7 +404,7 @@ function Navbar() {
           >
             <div className="max-h-[calc(100dvh-5rem)] overflow-y-auto px-5 pb-8 pt-2 sm:px-8">
               <ul className="flex flex-col">
-                {/* Services accordion */}
+                {/* Services Accordion */}
                 <li className="border-b border-[var(--color-border)]">
                   <button
                     type="button"
@@ -393,7 +424,7 @@ function Navbar() {
 
                   <AnimatePresence initial={false}>
                     {mobileServicesOpen && (
-                      <motion.ul
+                      <motion.div
                         id="mobile-services"
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
@@ -401,23 +432,32 @@ function Navbar() {
                         transition={{ duration: 0.35, ease: EASE }}
                         className="overflow-hidden"
                       >
-                        <div className="mb-5 ml-1 flex flex-col gap-1 border-l border-[var(--color-border)] pl-4">
-                          {SERVICES.map((s) => (
-                            <li key={s.href}>
-                              <Link
-                                href={s.href}
-                                className="flex items-center justify-between rounded-lg py-2.5 pr-2 text-base text-[var(--color-paragraph)] transition-colors hover:text-[var(--color-bronze)]"
-                              >
-                                {s.title}
-                                <FiArrowUpRight
-                                  aria-hidden="true"
-                                  className="h-4 w-4 text-[var(--color-muted)]"
-                                />
-                              </Link>
-                            </li>
+                        <div className="mb-6 ml-1 flex flex-col gap-6 border-l border-[var(--color-border)] pl-4 sm:grid sm:grid-cols-2 sm:gap-6">
+                          {SERVICE_CATEGORIES.map((group) => (
+                            <div key={group.category}>
+                              <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-[var(--color-bronze)]">
+                                {group.category}
+                              </p>
+                              <ul className="flex flex-col gap-0.5">
+                                {group.items.map((s) => (
+                                  <li key={s.href}>
+                                    <Link
+                                      href={s.href}
+                                      className="flex items-center justify-between rounded-lg py-2 pr-2 text-base text-[var(--color-paragraph)] transition-colors hover:text-[var(--color-bronze)]"
+                                    >
+                                      <span>{s.title}</span>
+                                      <FiArrowUpRight
+                                        aria-hidden="true"
+                                        className="h-4 w-4 shrink-0 text-[var(--color-muted)]"
+                                      />
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
                           ))}
                         </div>
-                      </motion.ul>
+                      </motion.div>
                     )}
                   </AnimatePresence>
                 </li>

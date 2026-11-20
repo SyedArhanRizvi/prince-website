@@ -9,13 +9,13 @@ import ContactSection from "@/components/Form/ContactSection";
 function ServicePage() {
   return (
     <>
-      <HeroSection></HeroSection>
+      <HeroSection></HeroSection> //d 
+      <Section3></Section3> //d 
+      <Section2></Section2> //d 
       <WhoWeAre></WhoWeAre>
-      <Section2></Section2>
-      <Section3></Section3>
-      <Section4></Section4>
+      <Section4></Section4> //d 
       <ContactSection></ContactSection>
-      <Faqs />
+      <Faqs /> //5
     </>
   );
 }
