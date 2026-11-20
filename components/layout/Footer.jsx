@@ -9,12 +9,12 @@ const PHONE_HREF = "tel:+919876543210";
 const EMAIL = "hello@atelierworkshop.com";
 
 const SERVICES = [
-  { title: "Sofa Repair", desc: "Restore comfort and shape", href: "/services/sofa-repair" },
-  { title: "New Sofa", desc: "Custom-made, built to last", href: "/services/new-sofa" },
-  { title: "Recliner Repair", desc: "Mechanisms, motors and fabric", href: "/services/recliner-repair" },
-  { title: "New Recliner", desc: "Plush, smooth-reclining designs", href: "/services/new-recliner" },
-  { title: "Dining Chair Repair", desc: "Joints, seats and finishes", href: "/services/dining-chair-repair" },
-  { title: "New Dining Chair", desc: "Elegant sets for every table", href: "/services/new-dining-chair" },
+  { title: "Sofa Repair", desc: "Restore comfort and shape", href: "/sofa-repair" },
+  { title: "New Sofa", desc: "Custom-made, built to last", href: "/new-sofa" },
+  { title: "Recliner Repair", desc: "Mechanisms, motors and fabric", href: "/recliner-repair" },
+  { title: "New Recliner", desc: "Plush, smooth-reclining designs", href: "/new-recliner" },
+  { title: "Dining Chair Repair", desc: "Joints, seats and finishes", href: "/dining-chair-repair" },
+  { title: "New Dining Chair", desc: "Elegant sets for every table", href: "/new-dining-chair" },
 ];
 
 const LINKS = [
