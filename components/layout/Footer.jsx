@@ -19,8 +19,8 @@ const SERVICES = [
 
 const LINKS = [
   { label: "Work", href: "/work" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/about-us" },
+  { label: "Contact", href: "/contact-us" },
   { label: "Privacy Policy", href: "/privacy" },
 ];
 

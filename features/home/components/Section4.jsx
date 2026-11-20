@@ -415,7 +415,7 @@ export default function Section4() {
 
                   <div className="flex flex-wrap items-center gap-2.5 pt-7">
                     <Link
-                      href="/contact"
+                      href="/contact-us"
                       className={`group inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-2.5 text-xs font-medium transition-colors duration-300 sm:text-sm ${t.btnPrimary}`}
                     >
                       Get Quote
@@ -459,7 +459,7 @@ export default function Section4() {
             </p>
           </div>
           <Link
-            href="/contact"
+            href="/contact-us"
             className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[var(--color-bronze)] px-6 py-3 text-xs font-medium text-[var(--color-button-text)] transition-colors duration-300 hover:bg-[var(--color-heading)] sm:text-sm"
           >
             Book Free Assessment

@@ -18,6 +18,10 @@ const BRAND = "Elara";
 const PHONE_LABEL = "+91 98765 43210";
 const PHONE_HREF = "tel:+919876543210";
 
+/* Scroll behaviour */
+const SHOW_ALWAYS_BELOW = 80; // px from top where the navbar is always visible
+const SCROLL_THRESHOLD = 8; // ignore tiny scroll movements (trackpad jitter)
+
 const SERVICES = [
   { title: "Sofa Repair", desc: "Restore comfort and shape", href: "/services/sofa-repair" },
   { title: "New Sofa", desc: "Custom-made, built to last", href: "/services/new-sofa" },
@@ -29,8 +33,8 @@ const SERVICES = [
 
 const LINKS = [
   { label: "Work", href: "/work" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/about-us" },
+  { label: "Contact", href: "/contact-us" },
 ];
 
 function Navbar() {
@@ -38,16 +42,22 @@ function Navbar() {
   const reduceMotion = useReducedMotion();
 
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   const dropdownRef = useRef(null);
   const closeTimer = useRef(null);
+  const lastY = useRef(0);
+  const ticking = useRef(false);
 
   // Transparent only on the home page (over the hero) before scrolling
   const isHome = pathname === "/";
   const solid = scrolled || mobileOpen || !isHome;
+
+  // Never hide while a menu is open
+  const hideNav = hidden && !mobileOpen && !dropdownOpen;
 
   /* ---------- Hover dropdown (with small delay so it never flickers) ---------- */
   const openDropdown = () => {
@@ -59,10 +69,42 @@ function Navbar() {
     closeTimer.current = setTimeout(() => setDropdownOpen(false), 120);
   };
 
-  /* ---------- Scroll state ---------- */
+  /* ---------- Scroll state: solid background + hide on scroll down / show on scroll up ---------- */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
+    lastY.current = window.scrollY;
+
+    const update = () => {
+      const y = window.scrollY;
+      const maxY = document.documentElement.scrollHeight - window.innerHeight;
+
+      setScrolled(y > 20);
+
+      // Ignore iOS rubber-band overscroll at the top and bottom
+      if (y >= 0 && y <= maxY) {
+        const delta = y - lastY.current;
+
+        if (y < SHOW_ALWAYS_BELOW) {
+          setHidden(false);
+          lastY.current = y;
+        } else if (delta > SCROLL_THRESHOLD) {
+          setHidden(true); // scrolling down
+          lastY.current = y;
+        } else if (delta < -SCROLL_THRESHOLD) {
+          setHidden(false); // scrolling up
+          lastY.current = y;
+        }
+      }
+
+      ticking.current = false;
+    };
+
+    const onScroll = () => {
+      if (ticking.current) return;
+      ticking.current = true;
+      requestAnimationFrame(update);
+    };
+
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -72,6 +114,7 @@ function Navbar() {
     setMobileOpen(false);
     setDropdownOpen(false);
     setMobileServicesOpen(false);
+    setHidden(false);
   }, [pathname]);
 
   /* ---------- Lock body scroll when mobile menu is open ---------- */
@@ -133,12 +176,19 @@ function Navbar() {
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: reduceMotion ? 0 : -24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: EASE }}
+      initial={{ opacity: 0, y: "-100%" }}
+      animate={{ opacity: 1, y: hideNav ? "-100%" : "0%" }}
+      transition={{
+        duration: reduceMotion ? 0.01 : 0.55,
+        ease: EASE,
+      }}
+      // Keyboard users tabbing into the navbar always get it back
+      onFocusCapture={() => setHidden(false)}
       className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-500 ${
         solid
-          ? "border-[var(--color-border)] bg-[var(--color-background)]/90 shadow-[0_1px_30px_rgba(51,45,39,0.06)] backdrop-blur-md"
+          ? `border-[var(--color-border)] bg-[var(--color-background)]/90 backdrop-blur-md ${
+              hideNav ? "shadow-none" : "shadow-[0_1px_30px_rgba(51,45,39,0.06)]"
+            }`
           : "border-transparent bg-transparent"
       }`}
     >
@@ -236,7 +286,7 @@ function Navbar() {
                         Not sure what you need?
                       </span>
                       <Link
-                        href="/contact"
+                        href="/contact-us"
                         onClick={() => setDropdownOpen(false)}
                         className="font-medium text-[var(--color-bronze)] transition-colors hover:text-[var(--color-heading)]"
                       >

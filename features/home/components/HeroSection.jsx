@@ -87,7 +87,7 @@ function HeroSection() {
         </motion.p>
 
         <motion.div variants={fadeUp} className="mt-9">
-          <Link href="/contact" className="inline-block">
+          <Link href="/contact-us" className="inline-block">
             <motion.span
               whileHover={reduceMotion ? undefined : { scale: 1.04 }}
               whileTap={reduceMotion ? undefined : { scale: 0.97 }}
