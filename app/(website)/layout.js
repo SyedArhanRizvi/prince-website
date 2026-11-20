@@ -2,6 +2,7 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { Suspense } from "react";
 
 const garamond = Cormorant_Garamond({
   variable: "--font-garamond",
@@ -29,7 +30,9 @@ export default function RootLayout({ children }) {
       className={`${garamond.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
+        <Suspense fallback={<div className="h-20" />}>
+          <Navbar />
+        </Suspense>
         {children}
         <Footer />
       </body>
